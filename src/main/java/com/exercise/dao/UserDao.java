@@ -58,7 +58,7 @@ public class UserDao {
         PreparedStatement pstmt;
 
         conn = connectionMaker.makeConnection();
-        pstmt = conn.prepareStatement("DELETE * FROM users");
+        pstmt = conn.prepareStatement("DELETE FROM users");
         pstmt.executeUpdate();
         pstmt.close();
         conn.close();
@@ -66,7 +66,7 @@ public class UserDao {
 
     public int getCount() throws SQLException {
         Connection conn = connectionMaker.makeConnection();
-        PreparedStatement pstmt = conn.prepareStatement("SELECT count(*) from users");
+        PreparedStatement pstmt = conn.prepareStatement("select count(*) from users");
 
         ResultSet rs = pstmt.executeQuery();
         rs.next();

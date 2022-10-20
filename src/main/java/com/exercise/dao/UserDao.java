@@ -64,6 +64,21 @@ public class UserDao {
         conn.close();
     }
 
+    public int getCount() throws SQLException {
+        Connection conn = connectionMaker.makeConnection();
+        PreparedStatement pstmt = conn.prepareStatement("SELECT count(*) from users");
+
+        ResultSet rs = pstmt.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+
+        rs.close();
+        pstmt.close();
+        conn.close();
+
+        return count;
+    }
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         UserDao userDao = new UserDao();
         userDao.add(new User("19", "mark19", "nineteen"));

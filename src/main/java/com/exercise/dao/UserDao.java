@@ -82,7 +82,7 @@ public class UserDao {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         UserDao userDao = new UserDao();
         userDao.add(new User("19", "mark19", "nineteen"));
-        User user = userDao.selectById("9");
+        User user = userDao.selectById("19");
         System.out.println(user.getName());
     }
 

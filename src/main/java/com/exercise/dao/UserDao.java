@@ -60,28 +60,62 @@ public class UserDao {
 
     public void deleteAll() throws SQLException {
         Connection conn = null;
-        PreparedStatement pstmt;
-
-        conn = connectionMaker.makeConnection();
-        pstmt = conn.prepareStatement("DELETE FROM users");
-        pstmt.executeUpdate();
-        pstmt.close();
-        conn.close();
+        PreparedStatement pstmt = null;
+        try {
+            conn = connectionMaker.makeConnection();
+            pstmt = conn.prepareStatement("DELETE FROM users");
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {  // error 발생해도 실행
+            if(pstmt != null){
+                try{
+                    pstmt.close();
+                }catch (SQLException e){
+                }
+            }
+            if(conn != null){
+                try{
+                    conn.close();
+                }catch (SQLException e){
+                }
+            }
+        }
     }
 
     public int getCount() throws SQLException {
-        Connection conn = connectionMaker.makeConnection();
-        PreparedStatement pstmt = conn.prepareStatement("select count(*) from users");
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try{
+            conn = connectionMaker.makeConnection();
+            pstmt = conn.prepareStatement("select count(*) from users");
+            rs = pstmt.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }finally {
+            if(rs != null){
+                try{
+                    rs.close();
+                }catch (SQLException e){
+                }
+            }
+            if(pstmt != null){
+                try{
+                    pstmt.close();
+                }catch (SQLException e){
+                }
+            }
+            if(conn != null){
+                try{
+                    conn.close();
+                }catch (SQLException e){
+                }
+            }
+        }
 
-        ResultSet rs = pstmt.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
-
-        rs.close();
-        pstmt.close();
-        conn.close();
-
-        return count;
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {

@@ -27,7 +27,7 @@ class UserDaoTest {
     @BeforeEach
     void setUp() {
         this.userDao = context.getBean("awsUserDao", UserDao.class);
-
+        System.out.println("before each");
     }
 
     @Test

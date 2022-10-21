@@ -20,10 +20,38 @@ public class UserDao {
         this.connectionMaker = connectionMaker;
     }
 
+    public void jdbcContextWithStatementStrategy(StatementStrategy stmt){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = connectionMaker.makeConnection();
+            // pstmt = conn.prepareStatement("DELETE FROM users");
+            pstmt = new DeleteAllStrategy().makePreparedStatement(conn);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {  // error 발생해도 실행
+            if(pstmt != null){
+                try{
+                    pstmt.close();
+                }catch (SQLException e){
+                }
+            }
+            if(conn != null){
+                try{
+                    conn.close();
+                }catch (SQLException e){
+                }
+            }
+        }
+    }
+
     public void add(User user) throws SQLException, ClassNotFoundException {
         Connection conn = connectionMaker.makeConnection();
-        PreparedStatement pstmt =
-                conn.prepareStatement("INSERT INTO users(id, name, password) values (?, ?, ?)");
+//        PreparedStatement pstmt =
+//                conn.prepareStatement("INSERT INTO users(id, name, password) values (?, ?, ?)");
+        PreparedStatement pstmt = new AddStrategy().makePreparedStatement(conn);
         pstmt.setString(1, user.getId());
         pstmt.setString(2, user.getName());
         pstmt.setString(3, user.getPassword());
@@ -59,29 +87,31 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = connectionMaker.makeConnection();
-            // pstmt = conn.prepareStatement("DELETE FROM users");
-            pstmt = new DeleteAllStrategy().makePreparedStatement(conn);
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }finally {  // error 발생해도 실행
-            if(pstmt != null){
-                try{
-                    pstmt.close();
-                }catch (SQLException e){
-                }
-            }
-            if(conn != null){
-                try{
-                    conn.close();
-                }catch (SQLException e){
-                }
-            }
-        }
+        jdbcContextWithStatementStrategy(new DeleteAllStrategy());
+
+//        Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        try {
+//            conn = connectionMaker.makeConnection();
+//            // pstmt = conn.prepareStatement("DELETE FROM users");
+//            pstmt = new DeleteAllStrategy().makePreparedStatement(conn);
+//            pstmt.executeUpdate();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }finally {  // error 발생해도 실행
+//            if(pstmt != null){
+//                try{
+//                    pstmt.close();
+//                }catch (SQLException e){
+//                }
+//            }
+//            if(conn != null){
+//                try{
+//                    conn.close();
+//                }catch (SQLException e){
+//                }
+//            }
+//        }
     }
 
     public int getCount() throws SQLException {

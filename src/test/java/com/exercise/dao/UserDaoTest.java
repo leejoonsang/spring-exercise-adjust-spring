@@ -66,6 +66,12 @@ class UserDaoTest {
     }
 
     @Test
+    void delete() throws SQLException {
+        userDao.deleteAll();
+        assertEquals(0, userDao.getCount());
+    }
+
+    @Test
     void SelectById() throws SQLException, ClassNotFoundException {
         assertThrows(EmptyResultDataAccessException.class, () -> {
             userDao.selectById("30");

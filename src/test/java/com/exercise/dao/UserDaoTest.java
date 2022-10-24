@@ -38,6 +38,7 @@ class UserDaoTest {
 
     @Test
     void addAndSelect() throws SQLException, ClassNotFoundException {
+        userDao = context.getBean("awsUserDao", UserDao.class);
         User user1 = new User("1", "sangjoon", "0000");
 
         userDao.deleteAll();

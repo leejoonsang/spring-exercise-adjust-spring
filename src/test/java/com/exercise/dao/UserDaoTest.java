@@ -72,12 +72,6 @@ class UserDaoTest {
     }
 
     @Test
-    void add() throws SQLException, ClassNotFoundException {
-        userDao.add(user1);
-        assertEquals(1, userDao.getCount());
-    }
-
-    @Test
     void SelectById() throws SQLException, ClassNotFoundException {
         assertThrows(EmptyResultDataAccessException.class, () -> {
             userDao.selectById("30");

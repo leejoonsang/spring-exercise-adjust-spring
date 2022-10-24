@@ -26,8 +26,7 @@ public class UserDao {
 
         try {
             conn = connectionMaker.makeConnection();
-            // pstmt = conn.prepareStatement("DELETE FROM users");
-            pstmt = new DeleteAllStrategy().makePreparedStatement(conn);
+            pstmt = stmt.makePreparedStatement(conn);
             pstmt.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -47,19 +46,26 @@ public class UserDao {
         }
     }
 
-    public void add(User user) throws SQLException, ClassNotFoundException {
-        Connection conn = connectionMaker.makeConnection();
+    public void add(User user) {
+        AddStrategy addStrategy = new AddStrategy(user);
+        jdbcContextWithStatementStrategy(addStrategy);
+
+//        Connection conn = connectionMaker.makeConnection();
 //        PreparedStatement pstmt =
 //                conn.prepareStatement("INSERT INTO users(id, name, password) values (?, ?, ?)");
-        PreparedStatement pstmt = new AddStrategy().makePreparedStatement(conn);
-        pstmt.setString(1, user.getId());
-        pstmt.setString(2, user.getName());
-        pstmt.setString(3, user.getPassword());
+        /*
+         위에는 전략 패턴 적용 전, 아래는 전략 패턴 적용 후 +) try/catch/finally 묶어서 빼줌
+         */
 
-        pstmt.executeUpdate();
-
-        pstmt.close();
-        conn.close();
+//        PreparedStatement pstmt = new AddStrategy().makePreparedStatement(conn);
+//        pstmt.setString(1, user.getId());
+//        pstmt.setString(2, user.getName());
+//        pstmt.setString(3, user.getPassword());
+//
+//        pstmt.executeUpdate();
+//
+//        pstmt.close();
+//        conn.close();
     }
 
     public User selectById(String id) throws SQLException, ClassNotFoundException {

@@ -47,6 +47,16 @@ public class UserDao {
 //        }
 //    }
 
+    // JdbcContext 로 넘김
+//    public void executeSQL(String sql){
+//        jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+//            @Override
+//            public PreparedStatement makePreparedStatement(Connection conn) throws SQLException {
+//                return conn.prepareStatement(sql);
+//            }
+//        });
+//    }
+
     public void add(final User user) {
         AddStrategy addStrategy = new AddStrategy(user);
         jdbcContext.workWithStatementStrategy(new StatementStrategy() {
@@ -107,12 +117,14 @@ public class UserDao {
 
     public void deleteAll() throws SQLException {
 
-        jdbcContext.workWithStatementStrategy(new StatementStrategy() {
-            @Override
-            public PreparedStatement makePreparedStatement(Connection conn) throws SQLException {
-                return conn.prepareStatement("DELETE FROM users");
-            }
-        });
+//        jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+//            @Override
+//            public PreparedStatement makePreparedStatement(Connection conn) throws SQLException {
+//                return conn.prepareStatement("DELETE FROM users");
+//            }
+//        });
+//        ---->
+        this.jdbcContext.executeSQL("delete from users");
 
 //        Connection conn = null;
 //        PreparedStatement pstmt = null;
